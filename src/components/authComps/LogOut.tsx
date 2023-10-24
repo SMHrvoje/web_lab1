@@ -1,7 +1,7 @@
 import React from "react";
 import {getAuth} from "firebase/auth";
 import {useAuth0} from "@auth0/auth0-react";
-import {Button, NavbarText} from "react-bootstrap";
+import {Button, Navbar} from "react-bootstrap";
 
 
 
@@ -20,9 +20,9 @@ const LogOut = () => {
     return (
 
         <>
-            <NavbarText className="px-2">
+            <Navbar.Brand className="px-2  font-weight-bolder">
                 {user?.email}
-            </NavbarText>
+            </Navbar.Brand>
             <Button onClick={logOutFunc}>
                 Log out
             </Button>

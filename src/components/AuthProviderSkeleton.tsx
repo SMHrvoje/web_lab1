@@ -8,9 +8,6 @@ export type TChildren = {
 const AuthProvider = ({children}:TChildren) => {
 
 
-
-
-
     return (
         <Auth0Provider
             domain={import.meta.env.VITE_AUTH0_DOMAIN}
