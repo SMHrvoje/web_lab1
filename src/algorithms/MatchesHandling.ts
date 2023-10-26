@@ -1,4 +1,3 @@
-import {TMatch} from "../components/Leaderboard/Leaderboard.tsx";
 import {TRounds} from "../pages/TournamentPage.tsx";
 
 

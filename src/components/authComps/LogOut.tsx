@@ -1,5 +1,3 @@
-import React from "react";
-import {getAuth} from "firebase/auth";
 import {useAuth0} from "@auth0/auth0-react";
 import {Button, Navbar} from "react-bootstrap";
 

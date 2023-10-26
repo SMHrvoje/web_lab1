@@ -1,12 +1,9 @@
-import React from "react";
 import {Button, Card, Col, Container, Form, Row} from "react-bootstrap";
 import {useForm,SubmitHandler} from "react-hook-form";
-import {addDoc,doc,collection} from "firebase/firestore"
+import {addDoc,collection} from "firebase/firestore"
 import {db} from "../config/firebase.tsx";
 import {getRounds} from "../algorithms/roundRobin/RoundRobin.ts";
 import {useAuth0} from "@auth0/auth0-react";
-import {Simulate} from "react-dom/test-utils";
-import reset = Simulate.reset;
 import {toast} from "react-toastify";
 
 type TNewTournamentData={

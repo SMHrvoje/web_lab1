@@ -5,12 +5,9 @@ import HomePage from "./pages/HomePage.tsx";
 import Skeleton from "./components/Skeleton.tsx";
 import AuthProvider from "./components/AuthProviderSkeleton.tsx";
 import AppWrapper from "./components/AppWrapper.tsx";
-import MyTournaments from "./pages/MyTournaments.tsx";
-import TournamentForm from "./components/CreateTournamentForm.tsx";
 import TournamentPage from "./pages/TournamentPage.tsx";
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
