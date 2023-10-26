@@ -11,23 +11,23 @@ type MatchProps={
 
 }
 type TScore={
-    value1:number | string,
-    value2:number | string
+    value1: string,
+    value2:  string
 }
 
 const Match = ({tournamentId,id,player1,player2,score,indeks}:MatchProps & TMatch) => {
             const {register,reset,handleSubmit,formState:{errors},setError}=useForm<TScore>(
                 {
                     defaultValues:{
-                        value1:score===":" ? "" : parseFloat(score.split(":")[0]),
-                        value2:score===":" ? "" : parseFloat(score.split(":")[1]),
+                        value1:score===":" ? "" : score.split(":")[0],
+                        value2:score===":" ? "" : score.split(":")[1],
 
                     }
                 }
             )
             const [editing,setEditing]=React.useState<boolean>(false)
 
-    const checkValue= (value:number | string)  =>{
+    const checkValue= (value: string)  =>{
                 if (isNaN(parseFloat(value))) return false
         const newValue=parseFloat(value)
         return newValue >= 0;

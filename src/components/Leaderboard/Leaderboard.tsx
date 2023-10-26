@@ -1,7 +1,7 @@
-import React, {ReactNode} from 'react';
-import {Col, Container, Row, Table} from "react-bootstrap";
+import React from 'react';
+import { Container, Row, Table} from "react-bootstrap";
 
-import {makeLeaderboard, TLeaderBoard, TLeaderboardTable} from "../../algorithms/MatchesHandling.ts";
+import {makeLeaderboard, TLeaderBoard} from "../../algorithms/MatchesHandling.ts";
 import {TRounds} from "../../pages/TournamentPage.tsx";
 
 

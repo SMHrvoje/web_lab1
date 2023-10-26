@@ -1,4 +1,3 @@
-import React from 'react';
 import Header from "./Header/Header.tsx";
 import {TChildren} from "./AuthProviderSkeleton.tsx";
 import { ToastContainer } from 'react-toastify';

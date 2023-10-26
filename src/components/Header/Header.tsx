@@ -1,15 +1,10 @@
-import React from 'react';
-import {Button, Container, Nav, Navbar, NavLink} from "react-bootstrap";
+import { Container, Nav, Navbar, NavLink} from "react-bootstrap";
 import LoginSignOut from "../authComps/LoginSignOut.tsx";
-import {useAuth0} from "@auth0/auth0-react";
 import trophy from "./trophy.jpg"
 
 
 
 const Header = () => {
-
-    const{isAuthenticated} =useAuth0()
-
 
     return(
         <>

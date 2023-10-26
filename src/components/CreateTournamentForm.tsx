@@ -37,7 +37,7 @@ const TournamentForm = () => {
                 name:data.name,
                 format:data.format,
                 players: players,
-                owner: user.email
+                owner: user?.email
             });
             await createRoundsAndMatches(docRef.id,players)
             toast.success("You have successfully created a tournament")
@@ -47,7 +47,7 @@ const TournamentForm = () => {
 
     }
 
-    const createRoundsAndMatches = async (tournamentId:string,members) => {
+    const createRoundsAndMatches = async (tournamentId:string,members:any) => {
         const players=getRounds(members)
         console.log(players)
         for(let i = 0; i < players.length; i++) {

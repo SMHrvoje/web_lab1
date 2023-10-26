@@ -20,9 +20,12 @@ const parseFormat =(format:string)=> {
 
 const LeaderboardCompator = (a:TPlayerStats,b:TPlayerStats):number=>{
    if(a.get("score")===b.get("score")){
-    return b.get("wins")- a.get("wins")
+    // @ts-ignore
+       return b.get("wins")- a.get("wins")
    }
-   else return b.get("score")-a.get("score")
+   else { // @ts-ignore
+       return b.get("score")-a.get("score")
+   }
 }
 
 
