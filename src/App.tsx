@@ -20,7 +20,6 @@ function App() {
               <Skeleton>
                   <Routes>
                       <Route path={"/"} element={<HomePage/>}/>
-                      <Route path={"/myTournaments"} element={<MyTournaments/>}/>
                       <Route path="/tournament/:id" element={<TournamentPage/>} />
                </Routes>
               </Skeleton>

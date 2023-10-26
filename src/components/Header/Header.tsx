@@ -28,15 +28,6 @@ const Header = () => {
                 </NavLink>
             </Navbar.Brand>
                 <Container className="justify-content-end">
-                    {isAuthenticated &&
-                        <Nav  >
-                        <NavLink href="/myTournaments"  disabled={window.location.pathname==="/myTournaments" }>
-                            <Button disabled={window.location.pathname=="/myTournaments" }>
-                                My tournaments
-                            </Button>
-                        </NavLink>
-                         </Nav>
-                    }
                     <Nav>
                         <LoginSignOut/>
                     </Nav>

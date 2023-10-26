@@ -1,72 +1,123 @@
 import React, {ReactNode} from 'react';
-import {Col, Container, Row, Stack} from "react-bootstrap";
-import {useParams} from "react-router-dom";
-import {doc, getDoc, collection,getDocs} from "firebase/firestore";
+import {Button, Col, Container, Row, Stack} from "react-bootstrap";
+import {useNavigate, useParams} from "react-router-dom";
+import {doc, getDoc, collection, getDocs, where, query,onSnapshot} from "firebase/firestore";
 import {db} from "../config/firebase.tsx";
 import {Ttournament} from "./MyTournaments.tsx";
 import TournamentRound from "../components/TournamentRounds/TournamentRound.tsx";
-import Leaderboard from "../components/Leaderboard/Leaderboard.tsx";
+import Leaderboard, {TMatch} from "../components/Leaderboard/Leaderboard.tsx";
+import Match from "../components/Match/Match.tsx";
 
-type Round ={
+export type TRounds=Map<number,TMatch[]>
+export type TMatch={
     id:string,
-    roundNumber:number
+    player1:string,
+    player2:string,
+    score:string
 }
 
 const TournamentPage = () =>{
     const {id} =useParams()
+    const navigate=useNavigate()
     const [tournament,setTournament]=React.useState<Ttournament>()
-    const [rounds,setRounds]=React.useState<Round[]>()
+    const [rounds,setRounds]=React.useState<TRounds>()
 
 
 
-    React.useEffect(() =>{
-        const tournamentsRef=doc(db,"tournaments",id!)
-        const getTournament =async () => {
-            const data=await getDoc(tournamentsRef);
-           // console.log(data.data())
-            setTournament({...data.data(),id:data.id} as Ttournament)
-            const roundsRef=collection(db,`tournaments/${data.id}/rounds`)
-            const rounds= await getDocs(roundsRef)
-            const roundsparsed=rounds.docs.map((doc) =>({...doc.data(),id:doc.id} as Round))
-            //console.log(roundsparsed)
-            setRounds(roundsparsed.sort((a:Round,b:Round)=>a.roundNumber-b.roundNumber))
+    React.useEffect(() => {
+        const tournamentsRef = doc(db, "tournaments", id!)
+        const getTournament = async () => {
+            const data = await getDoc(tournamentsRef);
+            const turnir = {...data.data(), id: data.id} as Ttournament
+            setTournament(turnir)
+            return turnir
+
         }
-        getTournament()
-    },[])
+        const q = query(collection(db, `tournaments/${id}/matches`));
+        const unsubscribe = onSnapshot(q, (querySnapshot: any) => {
+            const matchesGotten:TRounds=new Map<number, TMatch[]>()
+            querySnapshot.forEach((doc) => {
+                const gottenData:TMatch=({...doc.data(), id: doc.id} as TMatch);
+                if (matchesGotten.has(gottenData.round)){
+                    (matchesGotten.get(gottenData.round)).push(gottenData)
+                }
+                else{
+                    matchesGotten.set(gottenData.round,[gottenData])
+                }
+            });
+            setRounds(matchesGotten)
+        })
 
 
-       return(
-           <>
-               <Container className="text-center mb-5">
-                   <h1 className="mt-3 text-uppercase">
-                       {tournament?.name}
-                   </h1>
-                   <Row className="mt-5">
-                       <Stack direction="horizontal" gap={3} className="justify-content-evenly text-center mt-">
-                           <h5>Players:</h5>{tournament?.players?.map((player,index)=>(
-                           <span key={index} className="justify-content-center align-content-center  bg-success-subtle px-5 rounded-4 text-uppercase">{player}</span>
-                       ))}
-                       </Stack>
+            const mainFunction = async () => {
+                const tournament = await getTournament()
+                setTournament(tournament)
 
-                   </Row>
-                   <Row className="mt-4"><h2>Rounds</h2></Row>
-                   <Row className="mt-4">
-                       {rounds && rounds?.map((round,index):ReactNode=>(
-                           <Col xs={6} key={index}>
-                               <h5>{`Round ${round.roundNumber}`}</h5>
-                               <TournamentRound tournamentId={tournament!.id} roundId={round.id}/>
-                           </Col>
-                       ))}
-                   </Row>
-                   {tournament?.id &&  <Leaderboard tournamentId={tournament!.id} format={tournament!.format}  players={tournament!.players}/>
-                   }
-               </Container>
-           </>
-       )
+            }
+        mainFunction()
+
+            return () => {
+                unsubscribe()
+            }
+
+
+        }, [])
+
+
+        return (
+            <>
+                <Container className="mt-4">
+                    <Button onClick={() => {
+                        navigate("/")
+                    }}>
+                        back
+                    </Button>
+                </Container>
+                <Container className="text-center mb-5">
+                    <h1 className="mt-1 text-uppercase">
+                        {tournament?.name}
+                    </h1>
+                    <Row className="mt-5">
+
+                           <Row>
+                               <Col xs={4} lg={2}>
+                                   <h5>Players:</h5>
+                               </Col>
+                               {tournament?.players?.map((player, index) => (
+                               <Col xs={4} lg={2}>
+                                   <span key={index}
+                                         className="px-lg-5 py-lg-2 py-sm-1 px-sm-2 justify-content-center align-content-center  bg-success-subtle `` rounded-4 text-uppercase">{player}</span>
+
+                               </Col>
+                                 ))}
+                           </Row>
+
+
+                    </Row>
+                    <Row className="mt-4"><h2>Rounds</h2></Row>
+                    <Row className="mt-4">
+                        {rounds && Array.from(rounds.keys()).map((round, index): ReactNode => (
+                            <Col xs={12} lg={6}  key={index}>
+                                <h5>{`Round ${round}`}</h5>
+                                {rounds.get(round)?.map((match,index2) => (
+                                    <Match tournamentId={id!} {...match} indeks={index2} />
+                                ))}
+                            </Col>
+                        ))}
+                    </Row>
+                    {tournament?.id && <Leaderboard tournamentId={id!} format={tournament!.format}
+                                                    players={tournament!.players}
+                                                    rounds={rounds!}
+                    />
+                    }
+                </Container>
+            </>
+        )
 
 
 
 }
+
 
 
 export default TournamentPage
