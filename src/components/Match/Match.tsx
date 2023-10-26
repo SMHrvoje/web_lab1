@@ -1,14 +1,13 @@
 import React from 'react';
-import {TMatch} from "../TournamentRounds/TournamentRound.tsx";
 import {Stack, Form, Button} from "react-bootstrap";
 import {useForm,SubmitHandler} from "react-hook-form";
 import {updateDoc,doc} from "firebase/firestore"
 import {db} from "../../config/firebase.tsx";
+import {TMatch} from "../Leaderboard/Leaderboard.tsx";
 
 type MatchProps={
     tournamentId:string,
-    roundId:string,
-    id:string
+    indeks:number
 
 }
 type TScore={
@@ -16,19 +15,19 @@ type TScore={
     value2:number | string
 }
 
-const Match = ({tournamentId,roundId,id,player1,player2,score}:MatchProps & TMatch) => {
+const Match = ({tournamentId,id,player1,player2,score,indeks}:MatchProps & TMatch) => {
             const {register,reset,handleSubmit,formState:{errors},setError}=useForm<TScore>(
                 {
                     defaultValues:{
-                        value1:score==="" ? "" : parseFloat(score.split(":")[0]),
-                        value2:score==="" ? "" : parseFloat(score.split(":")[1]),
+                        value1:score===":" ? "" : parseFloat(score.split(":")[0]),
+                        value2:score===":" ? "" : parseFloat(score.split(":")[1]),
 
                     }
                 }
             )
             const [editing,setEditing]=React.useState<boolean>(false)
 
-    const checkValue= (value) =>{
+    const checkValue= (value:number | string)  =>{
                 if (isNaN(parseFloat(value))) return false
         const newValue=parseFloat(value)
         return newValue >= 0;
@@ -39,22 +38,35 @@ const Match = ({tournamentId,roundId,id,player1,player2,score}:MatchProps & TMat
                 const bool1=checkValue(data.value1)
                const bool2= checkValue(data.value2)
              if(!bool1) setError("value1",{type:"custom",message:"value 1 isnt valid"})
-        if(!bool2) setError("value2",{type:"custom",message:"value 1 isnt valid"})
-        const docRef= doc(db,`tournaments/${tournamentId}/rounds/${roundId}/matches/${id}`)
+        if(!bool2) setError("value2",{type:"custom",message:"value 2 isnt valid"})
+        if(bool1 && bool2) {
+            const docRef= doc(db,`tournaments/${tournamentId}/matches/${id}`)
 
-        await updateDoc(docRef,{
-            score: data.value1+":"+data.value2
-        })
+          await updateDoc(docRef,{
+                score: data.value1+":"+data.value2
+            })
 
-        setEditing(false)
+
+            setEditing(false)
+        }
+    }
+    const clearScores=async ()=>{
+        if(window.confirm("Are you sure you want to clear this score?")){
+            const docRef= doc(db,`tournaments/${tournamentId}/matches/${id}`)
+
+            await updateDoc(docRef,{
+                score: ":"
+            })
+            reset()
+        }
     }
 
 
 
 
     return(
-        <>
-            <form onSubmit={handleSubmit(onSubmit)} className="my-2">
+
+            <form onSubmit={handleSubmit(onSubmit)} className="my-2" key={indeks!}>
             <Stack direction="horizontal" >
 
                    <span  className="justify-content-center align-content-center  bg-success-subtle px-2 rounded-4 text-uppercase">{player1}</span>
@@ -70,18 +82,24 @@ const Match = ({tournamentId,roundId,id,player1,player2,score}:MatchProps & TMat
                         reset()
                         setEditing(false)
                     }}
-                    >reset</Button>
+                    >cancel</Button>
                 </> :
-                <Button onClick={()=>{
-                    setEditing(true)
-                }}
-                className="mx-1"
-                >Edit</Button>
+               <>
+                   <Button onClick={()=>{
+                       setEditing(true)
+                   }}
+                           className="mx-1"
+                   >Edit</Button>
+               <Button onClick={clearScores}>
+                   clear
+               </Button>
+               </>
+
                 }
 
             </Stack>
             </form>
-        </>
+
     )
 }
 
