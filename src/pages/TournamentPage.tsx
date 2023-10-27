@@ -6,6 +6,8 @@ import {db} from "../config/firebase.tsx";
 import Leaderboard from "../components/Leaderboard/Leaderboard.tsx";
 import Match from "../components/Match/Match.tsx";
 import {useAuth0} from "@auth0/auth0-react";
+import copyPic from "../../public/7124212_copy_clipboard_icon.svg"
+import {toast} from "react-toastify";
 
 export type TRounds=Map<number,TMatch[]>
 export type TMatch={
@@ -106,8 +108,10 @@ const TournamentPage = ({change}:TournamentPageProps) =>{
                                         window.location.href.split("/").slice(0,3).concat(["onlyView"]).concat(window.location.href.split("/").slice(4,5)).join("/")
                                     }
                                 </span>
-                                <Button onClick={() => {navigator.clipboard.writeText(window.location.href.split("/").slice(0,3).concat(["onlyView"]).concat(window.location.href.split("/").slice(4,5)).join("/")
-                                )}}>copy</Button>
+                                <img className="mx-2" alt="copy" src={copyPic} onClick={() => {navigator.clipboard.writeText(window.location.href.split("/").slice(0,3).concat(["onlyView"]).concat(window.location.href.split("/").slice(4,5)).join("/")
+                                )
+                                toast.success("Copied to clipboard")
+                                }}/>
                             </a>
                         </Row>
                     }

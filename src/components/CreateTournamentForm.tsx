@@ -117,12 +117,12 @@ const TournamentForm = () => {
                            <Row className="mb-2 ">
                                <Form.Group as={Col} controlId="formTournamentName" >
                                    <Form.Label>Tournament name</Form.Label>
-                                   <Form.Control className={errors.name && "border-warning"} {...register("name", { required: true })}  type="text" placeholder="Enter tournament name"/>
+                                   <Form.Control className={errors.name && "border-warning"} {...register("name", { required: true })}  type="text" placeholder="name"/>
                                    <Form.Text>name for your tournament</Form.Text>
                                </Form.Group>
                                <Form.Group as={Col} controlId="formTournamentFormat" >
                                    <Form.Label>Tournament format</Form.Label>
-                                   <Form.Control className={errors.format && "border-warning"} {...register("format", { required: true })}  type="text" placeholder="Enter tournament format"/>
+                                   <Form.Control className={errors.format && "border-warning"} {...register("format", { required: true })}  type="text" placeholder="format"/>
                                    <Form.Text>format like 3/1/0 (win/draw/lose)</Form.Text>
                                </Form.Group>
                            </Row>
