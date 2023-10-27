@@ -1,4 +1,4 @@
-import { Container, Nav, Navbar, NavLink} from "react-bootstrap";
+import { Container, Navbar, NavLink} from "react-bootstrap";
 import LoginSignOut from "../authComps/LoginSignOut.tsx";
 import trophy from "./trophy.jpg"
 
@@ -23,9 +23,7 @@ const Header = () => {
                 </NavLink>
             </Navbar.Brand>
                 <Container className="justify-content-end">
-                    <Nav>
                         <LoginSignOut/>
-                    </Nav>
                 </Container>
 
 

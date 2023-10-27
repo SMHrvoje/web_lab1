@@ -5,6 +5,7 @@ import {doc, getDoc, collection, query,onSnapshot} from "firebase/firestore";
 import {db} from "../config/firebase.tsx";
 import Leaderboard from "../components/Leaderboard/Leaderboard.tsx";
 import Match from "../components/Match/Match.tsx";
+import {useAuth0} from "@auth0/auth0-react";
 
 export type TRounds=Map<number,TMatch[]>
 export type TMatch={
@@ -18,15 +19,21 @@ export type Ttournament={
     name:string,
     format:string,
     id:string,
-    players:string[]
+    players:string[],
+    owner:string
 }
 
-const TournamentPage = () =>{
+type TournamentPageProps={
+    change:boolean
+}
+
+
+const TournamentPage = ({change}:TournamentPageProps) =>{
     const {id} =useParams()
     const navigate=useNavigate()
     const [tournament,setTournament]=React.useState<Ttournament>()
     const [rounds,setRounds]=React.useState<TRounds>()
-
+    const { user}=useAuth0()
 
 
     React.useEffect(() => {
@@ -69,7 +76,9 @@ const TournamentPage = () =>{
 
         }, [])
 
-
+        if ((change && user?.email!==tournament?.owner)){
+            navigate("/")
+        }
         return (
             <>
                 <Container className="mt-4">
@@ -85,28 +94,28 @@ const TournamentPage = () =>{
                     </h1>
                     <Row className="mt-5">
 
-                           <Row>
-                               <Col xs={4} lg={2}>
+
+                               <Col xs={4} lg={2} className="my-2">
                                    <h5>Players:</h5>
                                </Col>
                                {tournament?.players?.map((player:string, index:number) => (
-                               <Col xs={4} lg={2}>
+                               <Col xs={4} lg={2} className="my-2 text-center justify-content-center align-content-center">
                                    <span key={index}
-                                         className="px-lg-5 py-lg-2 py-sm-1 px-sm-2 justify-content-center align-content-center  bg-success-subtle `` rounded-4 text-uppercase">{player}</span>
+                                         className="px-lg-5 py-lg-2 py-sm-1 px-sm-2 justify-content-center align-content-center  bg-success-subtle rounded-4 text-uppercase">{player}</span>
 
                                </Col>
                                  ))}
-                           </Row>
+
 
 
                     </Row>
                     <Row className="mt-4"><h2>Rounds</h2></Row>
                     <Row className="mt-4">
-                        {rounds && Array.from(rounds.keys()).map((round, index): ReactNode => (
+                        {rounds && Array.from(rounds.keys()).sort((a,b)=>a-b).map((round, index): ReactNode => (
                             <Col xs={12} lg={6}  key={index}>
                                 <h5>{`Round ${round}`}</h5>
                                 {rounds.get(round)?.map((match,index2) => (
-                                    <Match tournamentId={id!} {...match} indeks={index2}  />
+                                    <Match tournamentId={id!} {...match} indeks={index2} change={change}  />
                                 ))}
                             </Col>
                         ))}

@@ -16,7 +16,8 @@ function App() {
               <Skeleton>
                   <Routes>
                       <Route path={"/"} element={<HomePage/>}/>
-                      <Route path="/tournament/:id" element={<TournamentPage/>} />
+                      <Route path="/tournament/:id" element={<TournamentPage change={true}/>} />
+                      <Route path="/tournament/onlyView/:id" element={<TournamentPage change={false} />} />
                </Routes>
               </Skeleton>
            </AppWrapper>

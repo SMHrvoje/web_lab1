@@ -18,7 +18,7 @@ const LogOut = () => {
     return (
 
         <>
-            <Navbar.Brand className="px-2  font-weight-bolder">
+            <Navbar.Brand className="d-none d-sm-block px-2 text-wrap  font-weight-bolder">
                 {user?.email}
             </Navbar.Brand>
             <Button onClick={logOutFunc}>

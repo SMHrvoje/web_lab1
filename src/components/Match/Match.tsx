@@ -1,5 +1,5 @@
 import React from 'react';
-import {Stack, Form, Button} from "react-bootstrap";
+import {Stack, Form, Button, Row, Col} from "react-bootstrap";
 import {useForm,SubmitHandler} from "react-hook-form";
 import {updateDoc,doc} from "firebase/firestore"
 import {db} from "../../config/firebase.tsx";
@@ -7,7 +7,8 @@ import {TMatch} from "../Leaderboard/Leaderboard.tsx";
 
 type MatchProps={
     tournamentId:string,
-    indeks:number
+    indeks:number,
+    change:boolean
 
 }
 type TScore={
@@ -15,7 +16,7 @@ type TScore={
     value2:  string
 }
 
-const Match = ({tournamentId,id,player1,player2,score,indeks}:MatchProps & TMatch) => {
+const Match = ({tournamentId,id,player1,player2,score,indeks,change}:MatchProps & TMatch) => {
             const {register,reset,handleSubmit,formState:{errors},setError}=useForm<TScore>(
                 {
                     defaultValues:{
@@ -67,37 +68,41 @@ const Match = ({tournamentId,id,player1,player2,score,indeks}:MatchProps & TMatc
     return(
 
             <form onSubmit={handleSubmit(onSubmit)} className="my-2" key={indeks!}>
-            <Stack direction="horizontal" >
+                <Row className="justify-content-center">
+                    <Col xxs={12} sm={10} md={4} lg={5} xl={4} className=" d-table-cell align-middle py-1">
+                        <span  className=" justify-content-center align-content-center  bg-success-subtle px-2 rounded-4 text-uppercase mx-2">{`${player1}`}</span>
+                        <span  className="justify-content-center align-content-center  bg-success-subtle px-2 rounded-4 text-uppercase">{`${player2}`}</span>
+                    </Col>
+                    <Col xxs={6} sm={6} md={4} lg={3} xl={4}>
+                    <Stack direction="horizontal" gap={1}>
+                        <Form.Control className={errors.value1 && "border-warning"} {...register("value1")} disabled={!editing}/>
+                        <Form.Control className={errors.value2 && "border-warning"} {...register("value2")} disabled={!editing}/>
 
-                   <span  className="justify-content-center align-content-center  bg-success-subtle px-2 rounded-4 text-uppercase">{player1}</span>
-                   <span className="px-2">v</span>
-                   <span  className="justify-content-center align-content-center  bg-success-subtle px-2 rounded-4 text-uppercase">{player2}</span>
-                   <span className="px-2">=</span>
-                   <Form.Control className={errors.value1 && "border-warning"} {...register("value1")} disabled={!editing}/>
-                    <span className="px-2">:</span>
-                   <Form.Control className={errors.value2 && "border-warning"} {...register("value2")} disabled={!editing}/>
-                {editing ? <>  <Button type="submit" className="mx-1">save</Button>
-                    <Button
-                    onClick={()=>{
-                        reset()
-                        setEditing(false)
-                    }}
-                    >cancel</Button>
-                </> :
-               <>
-                   <Button onClick={()=>{
-                       setEditing(true)
-                   }}
-                           className="mx-1"
-                   >Edit</Button>
-               <Button onClick={clearScores}>
-                   clear
-               </Button>
-               </>
+                    </Stack>
+                    </Col>
+                    {change && <>
+                        {editing ? <Col xs={12} lg={4} className="mt-1">  <Button type="submit" className="mx-1">save</Button>
+                                <Button
+                                    onClick={()=>{
+                                        reset()
+                                        setEditing(false)
+                                    }}
+                                >undo</Button>
+                            </Col> :
+                            <Col xs={12} lg={4} className="mt-1">
+                                <Button onClick={()=>{
+                                    setEditing(true)
+                                }}
+                                        className="mx-1"
+                                >Edit</Button>
+                                <Button onClick={clearScores}>
+                                    clear
+                                </Button>
+                            </Col>
 
-                }
-
-            </Stack>
+                        }
+                    </>}
+                </Row>
             </form>
 
     )
