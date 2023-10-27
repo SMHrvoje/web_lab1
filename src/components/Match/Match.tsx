@@ -28,6 +28,11 @@ const Match = ({tournamentId,id,player1,player2,score,indeks,change}:MatchProps 
             )
             const [editing,setEditing]=React.useState<boolean>(false)
 
+
+    React.useEffect(()=>{
+        reset()
+    },[reset, score])
+
     const checkValue= (value: string)  =>{
                 if (isNaN(parseFloat(value))) return false
         const newValue=parseFloat(value)
