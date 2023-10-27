@@ -36,11 +36,19 @@ const TournamentPage = ({change}:TournamentPageProps) =>{
     const { user}=useAuth0()
 
 
+
+
     React.useEffect(() => {
         const tournamentsRef = doc(db, "tournaments", id!)
         const getTournament = async () => {
             const data = await getDoc(tournamentsRef);
             const turnir = {...data.data(), id: data.id} as Ttournament
+            if(data.data()==undefined){
+                navigate("/")
+            }
+            if ((change && user && user?.email!==turnir?.owner)){
+                navigate("/")
+            }
             setTournament(turnir)
             return turnir
 
@@ -76,10 +84,8 @@ const TournamentPage = ({change}:TournamentPageProps) =>{
 
         }, [])
 
-        if ((change && user?.email!==tournament?.owner)){
-            navigate("/")
-        }
-        return (
+
+        if((change && user && user?.email===tournament?.owner) || (!change)) return (
             <>
                 <Container className="mt-4">
                     <Button onClick={() => {
@@ -92,6 +98,19 @@ const TournamentPage = ({change}:TournamentPageProps) =>{
                     <h1 className="mt-1 text-uppercase">
                         {tournament?.name}
                     </h1>
+                    {(user && user?.email===tournament?.owner) &&
+                        <Row className="justify-content-center align-content-center">
+                            <a>
+                                <span>
+                                    {
+                                        window.location.href.split("/").slice(0,3).concat(["onlyView"]).concat(window.location.href.split("/").slice(4,5)).join("/")
+                                    }
+                                </span>
+                                <Button onClick={() => {navigator.clipboard.writeText(window.location.href.split("/").slice(0,3).concat(["onlyView"]).concat(window.location.href.split("/").slice(4,5)).join("/")
+                                )}}>copy</Button>
+                            </a>
+                        </Row>
+                    }
                     <Row className="mt-5">
 
 

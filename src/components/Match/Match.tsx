@@ -16,35 +16,52 @@ type TScore={
     value2:  string
 }
 
+const checkValue= (value: string)  =>{
+    if (!isNumeric(value)) {
+        console.log("nije")
+        return false
+    }
+    const newValue=parseFloat(value)
+    return newValue >= 0;
+
+
+}
+function isNumeric(str:string):boolean {
+    // @ts-ignore
+    return !isNaN(str) &&
+        !isNaN(parseFloat(str))
+}
+
 const Match = ({tournamentId,id,player1,player2,score,indeks,change}:MatchProps & TMatch) => {
             const {register,reset,handleSubmit,formState:{errors},setError}=useForm<TScore>(
                 {
-                    defaultValues:{
-                        value1:score===":" ? "" : score.split(":")[0],
-                        value2:score===":" ? "" : score.split(":")[1],
+                    defaultValues:React.useMemo(()=>{
+                        return {
+                            value1:score===":" ? "" : score.split(":")[0],
+                            value2:score===":" ? "" : score.split(":")[1],
 
-                    }
+                        }
+                    },[score])
                 }
             )
             const [editing,setEditing]=React.useState<boolean>(false)
 
 
     React.useEffect(()=>{
-        reset()
-    },[reset, score])
+        reset({
+            value1:score===":" ? "" : score.split(":")[0],
+            value2:score===":" ? "" : score.split(":")[1],
 
-    const checkValue= (value: string)  =>{
-                if (isNaN(parseFloat(value))) return false
-        const newValue=parseFloat(value)
-        return newValue >= 0;
+        })
+    },[score])
 
 
-    }
     const onSubmit:SubmitHandler<TScore>=async (data) => {
+                console.log(data)
                 const bool1=checkValue(data.value1)
                const bool2= checkValue(data.value2)
              if(!bool1) setError("value1",{type:"custom",message:"value 1 isnt valid"})
-        if(!bool2) setError("value2",{type:"custom",message:"value 2 isnt valid"})
+            if(!bool2) setError("value2",{type:"custom",message:"value 2 isnt valid"})
         if(bool1 && bool2) {
             const docRef= doc(db,`tournaments/${tournamentId}/matches/${id}`)
 
