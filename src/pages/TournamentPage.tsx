@@ -87,7 +87,7 @@ const TournamentPage = ({change}:TournamentPageProps) =>{
         }, [])
 
 
-        if((change && user && user?.email===tournament?.owner) || (!change)) return (
+        if(change && user && user?.email===tournament?.owner || !change) return (
             <>
                 <Container className="mt-4">
                     <Button onClick={() => {
@@ -100,15 +100,15 @@ const TournamentPage = ({change}:TournamentPageProps) =>{
                     <h1 className="mt-1 text-uppercase">
                         {tournament?.name}
                     </h1>
-                    {(user && user?.email===tournament?.owner) &&
+                    {(change && user && user?.email===tournament?.owner) &&
                         <Row className="justify-content-center align-content-center">
                             <a>
                                 <span>
                                     {
-                                        window.location.href.split("/").slice(0,3).concat(["onlyView"]).concat(window.location.href.split("/").slice(4,5)).join("/")
+                                        window.location.href.split("/").slice(0,4).concat(["onlyView"]).concat(window.location.href.split("/").slice(4,5)).join("/")
                                     }
                                 </span>
-                                <img className="mx-2" alt="copy" src={copyPic} onClick={() => {navigator.clipboard.writeText(window.location.href.split("/").slice(0,3).concat(["onlyView"]).concat(window.location.href.split("/").slice(4,5)).join("/")
+                                <img className="mx-2" alt="copy" src={copyPic} onClick={() => {navigator.clipboard.writeText(window.location.href.split("/").slice(0,4).concat(["onlyView"]).concat(window.location.href.split("/").slice(4,5)).join("/")
                                 )
                                 toast.success("Copied to clipboard")
                                 }}/>
