@@ -28,8 +28,15 @@ const checkValue= (value: string)  =>{
 }
 function isNumeric(str:string):boolean {
     // @ts-ignore
-    return !isNaN(str) &&
-        !isNaN(parseFloat(str))
+    if(!isNaN(str) &&
+        !isNaN(parseFloat(str))){
+        const val=parseFloat(str)
+        if (val>999 ||(val.toString().split(".").length>1 && val.toString().split(".")[1].length>2)){
+            return false
+        }
+        else return true
+    }
+    else return false
 }
 
 const Match = ({tournamentId,id,player1,player2,score,indeks,change}:MatchProps & TMatch) => {

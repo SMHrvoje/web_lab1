@@ -18,6 +18,7 @@ function App() {
                       <Route path={"/"} element={<HomePage/>}/>
                       <Route path="/tournament/:id" element={<TournamentPage change={true}/>} />
                       <Route path="/tournament/onlyView/:id" element={<TournamentPage change={false} />} />
+                      <Route path="/*" element={<>not found</>} />
                </Routes>
               </Skeleton>
            </AppWrapper>
